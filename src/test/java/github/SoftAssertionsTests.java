@@ -5,7 +5,8 @@ import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Condition.partialText;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class SoftAssertionsTests {
@@ -18,34 +19,35 @@ public class SoftAssertionsTests {
     }
 
     @Test
-    void assertSelenidePageTest(){
+    void verifySoftAssertsWithJUnit5CodeTest(){
 
-        String JUnit5Code =
-                """
-                        @ExtendWith({SoftAssertsExtension.class})
-                         class Tests {
-                           @Test
-                           void test() {
-                             Configuration.assertionMode = SOFT;
-                             open("page.html");
-                         
-                             $("#first").should(visible).click();
-                             $("#second").should(visible).click();
-                           }
-                         }
-                    """;
+        String JUnit5Code = """
+                @ExtendWith({SoftAssertsExtension.class})
+                class Tests {
+                  @Test
+                  void test() {
+                    Configuration.assertionMode = SOFT;
+                    open("page.html");
+                
+                    $("#first").should(visible).click();
+                    $("#second").should(visible).click();
+                  }
+                }
+                """;
 
         open("/selenide/selenide");
 
         $("#wiki-tab").click();
         $("#wiki-pages-filter").setValue("SoftAssertions");
         $$("li.Box-row.wiki-more-pages")
-                .filterBy(Condition.text("SoftAssertions"))
+                .filterBy(text("SoftAssertions"))
                 .first()
-                .shouldBe(Condition.visible);
+                .shouldBe(visible);
         $("a[href='/selenide/selenide/wiki/SoftAssertions']").click();
-        $("#wiki-body .highlight.highlight-source-java")
-                .shouldHave(partialText(JUnit5Code.trim()));
+        $$("div.highlight.highlight-source-java")
+                .filter(Condition.text("@ExtendWith"))
+                .first()
+                .shouldHave(text(JUnit5Code));
     }
 
 
