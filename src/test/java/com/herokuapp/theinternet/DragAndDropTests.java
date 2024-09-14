@@ -17,6 +17,8 @@ static void beforeAll(){
     @Test
     void dragAndDropSuccessTest(){
         open("/drag_and_drop");
+        $("#column-a").shouldHave(text("A"));
+        $("#column-b").shouldHave(text("B"));
 
         actions()
                 .dragAndDrop($("#column-a"),$("#column-b"))
@@ -28,6 +30,9 @@ static void beforeAll(){
     @Test
     void moveElementsSuccessTest(){
         open("/drag_and_drop");
+
+        $("#column-a").shouldHave(text("A"));
+        $("#column-b").shouldHave(text("B"));
 
         actions()
                 .moveToElement($("#column-a"))
